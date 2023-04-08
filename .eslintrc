@@ -34,7 +34,8 @@
       "react/jsx-no-useless-fragment":"off",
       "@typescript-eslint/dot-notation":"off",
       "react/jsx-props-no-spreading":"off",
-      "jsx-a11y/label-has-associated-control":"off"
+      "jsx-a11y/label-has-associated-control":"off",
+      "@typescript-eslint/naming-convention":"off"
 
     }
    

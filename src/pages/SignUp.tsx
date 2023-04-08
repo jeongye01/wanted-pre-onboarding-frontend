@@ -1,6 +1,5 @@
 import client from 'app.modules/api/client';
 import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,17 +24,17 @@ function SignUp() {
 	return (
 		<div>
 			<form onSubmit={signUpHandler} className="flex flex-col">
-				<label htmlFor="id">아이디 *</label>
+				<label htmlFor="email-signup">이메일 *</label>
 				<input
-					id="id"
+					id="email-signup"
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 					data-testid="email-input"
 					type="email"
 				/>
-				<label htmlFor="password">비밀번호 *</label>
+				<label htmlFor="password-signup">비밀번호 *</label>
 				<input
-					id="password"
+					id="password-signup"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 					data-testid="password-input"
