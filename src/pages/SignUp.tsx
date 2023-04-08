@@ -1,11 +1,26 @@
+import client from 'app.modules/api/client';
+import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
+	const navigate = useNavigate();
 	const signUpHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
+		try {
+			const response = await client.post('/auth/signup', {
+				email,
+				password,
+			});
+			console.log(response);
+			// 회원가입이 성공적으로 처리되었다면 /signin 경로로 이동합니다.
+			navigate(SERVICE_URL.signIn);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 	return (
 		<div>
