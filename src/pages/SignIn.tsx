@@ -17,6 +17,7 @@ function SignIn() {
 				password,
 			});
 			client.defaults.headers['Authorization'] = `Bearer ${access_token}`;
+			localStorage.setItem('ACCESS_TOKEN', access_token);
 			// 로그인이 성공적으로 처리되었다면 /todo 경로로 이동합니다.
 			navigate(SERVICE_URL.todo);
 		} catch (error) {
