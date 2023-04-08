@@ -4,24 +4,61 @@ import React, { useEffect, useState } from 'react';
 
 interface Props {
 	todo: ITodo;
-	onCheckTodo: (todo: ITodo) => void;
-	onDeleteTodo: (id: ITodo['id']) => void;
+	onDeleteTodo: (id: ITodo['id']) => Promise<void>;
+	onUpdateTodo: (id: ITodo['id'], todo: ITodo['todo'], isCompleted: ITodo['isCompleted']) => Promise<boolean>;
 }
-function TodoItem({ todo, onCheckTodo, onDeleteTodo }: Props) {
-	const { id, isCompleted, todo: content } = todo;
+function TodoItem({ todo, onUpdateTodo, onDeleteTodo }: Props) {
+	const { id, isCompleted, todo: todoText } = todo;
+	const [content, setContent] = useState<string>(todoText); // for optimistic ui
+	const [isVisible, setIsVisible] = useState<boolean>(false);
+	const [updatedTodo, setUpdatedTodo] = useState<string>(content);
+	const updateTodoContentHandler = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setContent(updatedTodo);
+		const res = await onUpdateTodo(id, updatedTodo, isCompleted);
+		if (!res) {
+			setContent(todoText);
+		}
+		setIsVisible(false);
+	};
 	return (
-		<li key={id}>
+		<li>
 			<label>
-				<input defaultChecked={isCompleted} onChange={() => onCheckTodo(todo)} type="checkbox" />
+				<input
+					defaultChecked={isCompleted}
+					onChange={(e) => onUpdateTodo(id, content, e.target.checked)}
+					type="checkbox"
+				/>
 				<span>{content}</span>
 			</label>
-			<input data-testid="modify-input" />
-			<button data-testid="modify-button">수정</button>
+
+			<button onClick={() => setIsVisible(true)} data-testid="modify-button">
+				수정
+			</button>
 			<button onClick={() => onDeleteTodo(id)} data-testid="delete-button">
 				삭제
 			</button>
-			<button data-testid="submit-button">제출</button>
-			<button data-testid="cancel-button">취소</button>
+			{isVisible && (
+				<form onSubmit={updateTodoContentHandler}>
+					<input
+						value={updatedTodo}
+						onChange={(e) => setUpdatedTodo(e.target.value)}
+						data-testid="modify-input"
+						type="text"
+						enterKeyHint="done"
+						autoComplete="off"
+						autoCapitalize="off"
+						// eslint-disable-next-line jsx-a11y/no-autofocus
+						autoFocus
+					/>
+					<button type="submit" data-testid="submit-button">
+						제출
+					</button>
+					<button type="button" onClick={() => setIsVisible(false)} data-testid="cancel-button">
+						취소
+					</button>
+				</form>
+			)}
 		</li>
 	);
 }
@@ -58,26 +95,28 @@ function Todo() {
 			console.log(res);
 			let temp = [...todos];
 			temp = temp.filter((item) => item.id !== id);
-			setTodos(temp); //optimistic ui구현
+			setTodos(temp);
 		} catch (error) {
-			getTodosHandler();
 			console.error(error);
 		}
 	};
-	console.log(todos);
-	const checkTodoHandler = async (todo: ITodo): Promise<void> => {
-		const { id, isCompleted } = todo;
+	const updateTodoHandler = async (
+		id: ITodo['id'],
+		todo: ITodo['todo'],
+		isCompleted: ITodo['isCompleted']
+	): Promise<boolean> => {
 		try {
 			const res = await client.put(`/todos/${id}`, {
 				todo,
 				isCompleted,
 			});
-			console.log(res);
+			return true;
 		} catch (error) {
-			getTodosHandler();
 			console.error(error);
+			return false;
 		}
 	};
+
 	useEffect(() => {
 		getTodosHandler();
 	}, []);
@@ -89,9 +128,11 @@ function Todo() {
 					추가
 				</button>
 			</form>
-			{todos.map((todo) => (
-				<TodoItem key={todo.id} todo={todo} onCheckTodo={checkTodoHandler} onDeleteTodo={deleteTodoHandler} />
-			))}
+			<ul>
+				{todos.map((todo) => (
+					<TodoItem key={todo.id} todo={todo} onDeleteTodo={deleteTodoHandler} onUpdateTodo={updateTodoHandler} />
+				))}
+			</ul>
 		</div>
 	);
 }
