@@ -1,6 +1,6 @@
 import client from 'app.modules/api/client';
 import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
@@ -21,6 +21,11 @@ function SignUp() {
 			console.error(error);
 		}
 	};
+	useEffect(() => {
+		if (localStorage.getItem('ACCESS_TOKEN')) {
+			navigate(SERVICE_URL.todo);
+		}
+	}, []);
 	return (
 		<div>
 			<form onSubmit={signUpHandler} className="flex flex-col">
