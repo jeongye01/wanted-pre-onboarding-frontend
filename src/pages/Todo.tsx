@@ -1,8 +1,10 @@
 import client from 'app.modules/api/client';
-import React, { useState } from 'react';
+import { ITodo } from 'app.modules/types/todo';
+import React, { useEffect, useState } from 'react';
 
 function Todo() {
 	const [newTodo, setNewTodo] = useState<string>('');
+	const [todos, setTodos] = useState<ITodo[]>([]);
 	const addNewTodoHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!newTodo.trim()) return;
@@ -15,6 +17,17 @@ function Todo() {
 			console.error(error);
 		}
 	};
+	const getTodosHandler = async () => {
+		try {
+			const { data } = await client.get('/todos');
+			setTodos(data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+	useEffect(() => {
+		getTodosHandler();
+	}, []);
 	return (
 		<div>
 			<form onSubmit={addNewTodoHandler}>
@@ -23,15 +36,17 @@ function Todo() {
 					추가
 				</button>
 			</form>
-			<li>
-				<label>
-					<input type="checkbox" />
-					<span>TODO 1</span>
-				</label>
-				<input data-testid="modify-input" />
-				<button data-testid="submit-button">제출</button>
-				<button data-testid="cancel-button">취소</button>
-			</li>
+			{todos.map(({ id, todo, isCompleted }) => (
+				<li key={id}>
+					<label>
+						<input type="checkbox" />
+						<span>{todo}</span>
+					</label>
+					<input defaultChecked={isCompleted} data-testid="modify-input" />
+					<button data-testid="submit-button">제출</button>
+					<button data-testid="cancel-button">취소</button>
+				</li>
+			))}
 			<li>
 				<label>
 					<input type="checkbox" />
