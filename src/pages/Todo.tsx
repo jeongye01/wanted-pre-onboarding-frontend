@@ -2,6 +2,30 @@ import client from 'app.modules/api/client';
 import { ITodo } from 'app.modules/types/todo';
 import React, { useEffect, useState } from 'react';
 
+interface Props {
+	todo: ITodo;
+	onCheckTodo: (todo: ITodo) => void;
+	onDeleteTodo: (id: ITodo['id']) => void;
+}
+function TodoItem({ todo, onCheckTodo, onDeleteTodo }: Props) {
+	const { id, isCompleted, todo: content } = todo;
+	return (
+		<li key={id}>
+			<label>
+				<input defaultChecked={isCompleted} onChange={() => onCheckTodo(todo)} type="checkbox" />
+				<span>{content}</span>
+			</label>
+			<input data-testid="modify-input" />
+			<button data-testid="modify-button">수정</button>
+			<button onClick={() => onDeleteTodo(id)} data-testid="delete-button">
+				삭제
+			</button>
+			<button data-testid="submit-button">제출</button>
+			<button data-testid="cancel-button">취소</button>
+		</li>
+	);
+}
+
 function Todo() {
 	const [newTodo, setNewTodo] = useState<string>('');
 	const [todos, setTodos] = useState<ITodo[]>([]);
@@ -28,7 +52,7 @@ function Todo() {
 		}
 	};
 
-	const deleteTodoHandler = async (id: ITodo['id']) => {
+	const deleteTodoHandler = async (id: ITodo['id']): Promise<void> => {
 		try {
 			const res = await client.delete(`/todos/${id}`);
 			console.log(res);
@@ -41,7 +65,8 @@ function Todo() {
 		}
 	};
 	console.log(todos);
-	const checkTodoHandler = async (id: ITodo['id'], todo: ITodo['todo'], isCompleted: ITodo['isCompleted']) => {
+	const checkTodoHandler = async (todo: ITodo): Promise<void> => {
+		const { id, isCompleted } = todo;
 		try {
 			const res = await client.put(`/todos/${id}`, {
 				todo,
@@ -64,34 +89,9 @@ function Todo() {
 					추가
 				</button>
 			</form>
-			{todos.map(({ id, todo, isCompleted }) => (
-				<li key={id}>
-					<label>
-						<input
-							defaultChecked={isCompleted}
-							onChange={(e) => checkTodoHandler(id, todo, e.target.checked)}
-							type="checkbox"
-						/>
-						<span>{todo}</span>
-					</label>
-					<input data-testid="modify-input" />
-					<button data-testid="modify-button">수정</button>
-					<button onClick={() => deleteTodoHandler(id)} data-testid="delete-button">
-						삭제
-					</button>
-					<button data-testid="submit-button">제출</button>
-					<button data-testid="cancel-button">취소</button>
-				</li>
+			{todos.map((todo) => (
+				<TodoItem key={todo.id} todo={todo} onCheckTodo={checkTodoHandler} onDeleteTodo={deleteTodoHandler} />
 			))}
-			<li>
-				<label>
-					<input type="checkbox" />
-					<span>TODO 2</span>
-				</label>
-				<input data-testid="modify-input" />
-				<button data-testid="submit-button">제출</button>
-				<button data-testid="cancel-button">취소</button>
-			</li>
 		</div>
 	);
 }
