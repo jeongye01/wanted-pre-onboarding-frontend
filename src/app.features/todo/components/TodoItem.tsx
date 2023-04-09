@@ -79,7 +79,10 @@ export default function TodoItem({ todo, onUpdateTodo, onDeleteTodo }: Props) {
 						</button>
 						<button
 							type="button"
-							onClick={() => setIsEditFormVisible(false)}
+							onClick={() => {
+								setUpdatedTodo(todo.todo);
+								setIsEditFormVisible(false);
+							}}
 							data-testid="cancel-button"
 							className="rounded bg-g6 p-[0.3rem] text-secondary"
 						>
