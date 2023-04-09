@@ -7,46 +7,61 @@ interface Props {
 	onUpdateTodo: (id: ITodo['id'], todo: ITodo['todo'], isCompleted: ITodo['isCompleted']) => Promise<boolean>;
 }
 export default function TodoItem({ todo, onUpdateTodo, onDeleteTodo }: Props) {
-	const { id, isCompleted, todo: todoText } = todo;
-	const [content, setContent] = useState<string>(todoText); // for optimistic ui
-	const [isVisible, setIsVisible] = useState<boolean>(false);
-	const [updatedTodo, setUpdatedTodo] = useState<string>(content);
-	const updateTodoContentHandler = async (e: React.FormEvent) => {
+	const [todoItem, setTodoItem] = useState<ITodo>(todo); // for optimistic ui
+	const [isEditFormVisible, setIsEditFormVisible] = useState<boolean>(false);
+	const [updatedTodo, setUpdatedTodo] = useState<string>(todo.todo);
+	const updateTodoHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setContent(updatedTodo);
-		setIsVisible(false);
-		const res = await onUpdateTodo(id, updatedTodo, isCompleted);
+		const snapShot = { ...todoItem };
+		setTodoItem(() => ({
+			...snapShot,
+			todo: updatedTodo,
+		}));
+		setIsEditFormVisible(false);
+		const res = await onUpdateTodo(todoItem.id, updatedTodo, todoItem.isCompleted);
 		if (!res) {
-			setContent(todoText);
+			setTodoItem(snapShot);
 		}
 	};
+	const updateIsCompletedHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const snapShot = { ...todoItem };
+		setTodoItem(() => ({
+			...snapShot,
+			isCompleted: e.target.checked,
+		}));
+		const res = await onUpdateTodo(todoItem.id, updatedTodo, e.target.checked);
+		if (!res) {
+			setTodoItem(snapShot);
+		}
+	};
+
 	return (
 		<li className="flex justify-between w-full whitespace-nowrap ">
 			<div className="space-x-[1rem] flex items-center w-full">
 				<label className="flex space-x-[0.8rem]">
-					<input
-						defaultChecked={isCompleted}
-						onChange={(e) => onUpdateTodo(id, content, e.target.checked)}
-						type="checkbox"
-					/>
-					{!isVisible && <span>{content}</span>}
+					<input checked={todoItem.isCompleted} onChange={updateIsCompletedHandler} type="checkbox" />
+					{!isEditFormVisible && <span>{todoItem.todo}</span>}
 				</label>
-				{!isVisible && (
+				{!isEditFormVisible && (
 					<>
 						<button
-							onClick={() => setIsVisible(true)}
+							onClick={() => setIsEditFormVisible(true)}
 							data-testid="modify-button"
 							className=" rounded bg-g6 p-[0.3rem] "
 						>
 							수정
 						</button>
-						<button onClick={() => onDeleteTodo(id)} data-testid="delete-button" className=" rounded bg-g6 p-[0.3rem] ">
+						<button
+							onClick={() => onDeleteTodo(todoItem.id)}
+							data-testid="delete-button"
+							className=" rounded bg-g6 p-[0.3rem] "
+						>
 							삭제
 						</button>
 					</>
 				)}
-				{isVisible && (
-					<form onSubmit={updateTodoContentHandler} className="flex items-center w-full space-x-[1rem]">
+				{isEditFormVisible && (
+					<form onSubmit={updateTodoHandler} className="flex items-center w-full space-x-[1rem]">
 						<input
 							value={updatedTodo}
 							onChange={(e) => setUpdatedTodo(e.target.value)}
@@ -64,7 +79,7 @@ export default function TodoItem({ todo, onUpdateTodo, onDeleteTodo }: Props) {
 						</button>
 						<button
 							type="button"
-							onClick={() => setIsVisible(false)}
+							onClick={() => setIsEditFormVisible(false)}
 							data-testid="cancel-button"
 							className="rounded bg-g6 p-[0.3rem] text-secondary"
 						>
