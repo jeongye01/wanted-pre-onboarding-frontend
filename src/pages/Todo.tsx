@@ -68,7 +68,7 @@ function Todo() {
 						value={newTodo}
 						onChange={(e) => setNewTodo(e.target.value)}
 						data-testid="new-todo-input"
-						className="w-full rounded-none outline-none border-[0.1rem] border-g6 "
+						className="input-common"
 					/>
 					<button type="submit" data-testid="new-todo-add-button" className="shadow rounded bg-g6 p-[0.5rem]">
 						추가

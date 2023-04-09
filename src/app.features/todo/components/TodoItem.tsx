@@ -57,7 +57,7 @@ export default function TodoItem({ todo, onUpdateTodo, onDeleteTodo }: Props) {
 							autoCapitalize="off"
 							// eslint-disable-next-line jsx-a11y/no-autofocus
 							autoFocus
-							className="w-full  rounded-none outline-none border-[0.1rem] border-g6 "
+							className="input-common "
 						/>
 						<button type="submit" data-testid="submit-button" className="rounded bg-g6 p-[0.3rem] text-primary">
 							제출

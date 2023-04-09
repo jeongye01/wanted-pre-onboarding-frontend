@@ -55,5 +55,12 @@ body{
     .text-body1{
         @apply font-[400] text-[1.2rem] leading-[1.8rem] -tracking-[0.06rem];
      }
+
+   .input-common{
+      @apply w-full rounded-none outline-none border-[0.1rem] border-g6
+   }
+   .button-auth{
+      @apply disabled:bg-g6 disabled:cursor-not-allowed p-[1rem] rounded-[0.6rem] text-white bg-primary
+   }
   
 }
