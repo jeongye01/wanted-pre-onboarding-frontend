@@ -1,3 +1,4 @@
+import AuthLayout from 'app.features/auth/components/AuthLayout';
 import client from 'app.modules/api/client';
 import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
 import React, { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ function SignUp() {
 			navigate(SERVICE_URL.signIn);
 		} catch (error) {
 			console.error(error);
+			alert('오류 발생');
 		}
 	};
 	useEffect(() => {
@@ -27,8 +29,8 @@ function SignUp() {
 		}
 	}, []);
 	return (
-		<div>
-			<form onSubmit={signUpHandler} className="flex flex-col">
+		<AuthLayout title="회원가입">
+			<form onSubmit={signUpHandler} className="flex flex-col space-y-[0.8rem] text-body2">
 				<label htmlFor="email-signup">이메일 *</label>
 				<input
 					id="email-signup"
@@ -36,6 +38,7 @@ function SignUp() {
 					onChange={(e) => setEmail(e.target.value)}
 					data-testid="email-input"
 					type="email"
+					className="input-common"
 				/>
 				<label htmlFor="password-signup">비밀번호 *</label>
 				<input
@@ -44,16 +47,18 @@ function SignUp() {
 					onChange={(e) => setPassword(e.target.value)}
 					data-testid="password-input"
 					minLength={8}
+					className="input-common"
 				/>
 				<button
 					disabled={Boolean(!email.includes('@') || password.length < 8)}
 					type="submit"
 					data-testid="signup-button"
+					className="button-auth"
 				>
 					회원가입
 				</button>
 			</form>
-		</div>
+		</AuthLayout>
 	);
 }
 

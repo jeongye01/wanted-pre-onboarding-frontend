@@ -1,3 +1,4 @@
+import AuthLayout from 'app.features/auth/components/AuthLayout';
 import client from 'app.modules/api/client';
 import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
 import React, { useEffect, useState } from 'react';
@@ -30,28 +31,35 @@ function SignIn() {
 		}
 	}, []);
 	return (
-		<div>
-			<form onSubmit={signInHandler} className="flex flex-col">
+		<AuthLayout title="로그인">
+			<form onSubmit={signInHandler} className="flex flex-col space-y-[0.8rem] text-body2">
 				<label htmlFor="email-signin">아이디</label>
 				<input
 					id="email-signin"
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
-					data-testid="email"
+					data-testid="email-input"
 					type="email"
+					className="input-common"
 				/>
 				<label htmlFor="password-signin">비밀번호</label>
 				<input
 					id="password-signin"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
-					data-testid="password"
+					data-testid="password-input"
+					className="input-common"
 				/>
-				<button disabled={Boolean(!email.trim() || !password.trim())} type="submit" data-testid="signin-button">
+				<button
+					disabled={Boolean(!email.trim() || !password.trim())}
+					type="submit"
+					data-testid="signin-button"
+					className="button-auth"
+				>
 					로그인
 				</button>
 			</form>
-		</div>
+		</AuthLayout>
 	);
 }
 
