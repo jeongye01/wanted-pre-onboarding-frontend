@@ -61,18 +61,25 @@ function Todo() {
 		getTodosHandler();
 	}, []);
 	return (
-		<div>
-			<form onSubmit={addNewTodoHandler}>
-				<input value={newTodo} onChange={(e) => setNewTodo(e.target.value)} data-testid="new-todo-input" />
-				<button type="submit" data-testid="new-todo-add-button">
-					추가
-				</button>
-			</form>
-			<ul>
-				{todos.map((todo) => (
-					<TodoItem key={todo.id} todo={todo} onDeleteTodo={deleteTodoHandler} onUpdateTodo={updateTodoHandler} />
-				))}
-			</ul>
+		<div className="h-screen max-w-[50rem] mx-auto px-[2rem] bg-w">
+			<main className=" whitespace-nowrap text-subhead2 space-y-[1.6rem] py-[2.4rem] w-full">
+				<form onSubmit={addNewTodoHandler} className="flex space-x-[1rem]">
+					<input
+						value={newTodo}
+						onChange={(e) => setNewTodo(e.target.value)}
+						data-testid="new-todo-input"
+						className="w-full rounded-none outline-none border-[0.1rem] border-g6 "
+					/>
+					<button type="submit" data-testid="new-todo-add-button" className="shadow rounded bg-g6 p-[0.5rem]">
+						추가
+					</button>
+				</form>
+				<ul className=" space-y-[1.6rem]  ">
+					{todos.map((todo) => (
+						<TodoItem key={todo.id} todo={todo} onDeleteTodo={deleteTodoHandler} onUpdateTodo={updateTodoHandler} />
+					))}
+				</ul>
+			</main>
 		</div>
 	);
 }

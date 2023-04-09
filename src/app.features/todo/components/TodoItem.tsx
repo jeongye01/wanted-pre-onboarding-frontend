@@ -14,50 +14,65 @@ export default function TodoItem({ todo, onUpdateTodo, onDeleteTodo }: Props) {
 	const updateTodoContentHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setContent(updatedTodo);
+		setIsVisible(false);
 		const res = await onUpdateTodo(id, updatedTodo, isCompleted);
 		if (!res) {
 			setContent(todoText);
 		}
-		setIsVisible(false);
 	};
 	return (
-		<li>
-			<label>
-				<input
-					defaultChecked={isCompleted}
-					onChange={(e) => onUpdateTodo(id, content, e.target.checked)}
-					type="checkbox"
-				/>
-				<span>{content}</span>
-			</label>
-
-			<button onClick={() => setIsVisible(true)} data-testid="modify-button">
-				수정
-			</button>
-			<button onClick={() => onDeleteTodo(id)} data-testid="delete-button">
-				삭제
-			</button>
-			{isVisible && (
-				<form onSubmit={updateTodoContentHandler}>
+		<li className="flex justify-between w-full whitespace-nowrap ">
+			<div className="space-x-[1rem] flex items-center w-full">
+				<label className="flex space-x-[0.8rem]">
 					<input
-						value={updatedTodo}
-						onChange={(e) => setUpdatedTodo(e.target.value)}
-						data-testid="modify-input"
-						type="text"
-						enterKeyHint="done"
-						autoComplete="off"
-						autoCapitalize="off"
-						// eslint-disable-next-line jsx-a11y/no-autofocus
-						autoFocus
+						defaultChecked={isCompleted}
+						onChange={(e) => onUpdateTodo(id, content, e.target.checked)}
+						type="checkbox"
 					/>
-					<button type="submit" data-testid="submit-button">
-						제출
-					</button>
-					<button type="button" onClick={() => setIsVisible(false)} data-testid="cancel-button">
-						취소
-					</button>
-				</form>
-			)}
+					{!isVisible && <span>{content}</span>}
+				</label>
+				{!isVisible && (
+					<>
+						<button
+							onClick={() => setIsVisible(true)}
+							data-testid="modify-button"
+							className=" rounded bg-g6 p-[0.3rem] "
+						>
+							수정
+						</button>
+						<button onClick={() => onDeleteTodo(id)} data-testid="delete-button" className=" rounded bg-g6 p-[0.3rem] ">
+							삭제
+						</button>
+					</>
+				)}
+				{isVisible && (
+					<form onSubmit={updateTodoContentHandler} className="flex items-center w-full space-x-[1rem]">
+						<input
+							value={updatedTodo}
+							onChange={(e) => setUpdatedTodo(e.target.value)}
+							data-testid="modify-input"
+							type="text"
+							enterKeyHint="done"
+							autoComplete="off"
+							autoCapitalize="off"
+							// eslint-disable-next-line jsx-a11y/no-autofocus
+							autoFocus
+							className="w-full  rounded-none outline-none border-[0.1rem] border-g6 "
+						/>
+						<button type="submit" data-testid="submit-button" className="rounded bg-g6 p-[0.3rem] text-primary">
+							제출
+						</button>
+						<button
+							type="button"
+							onClick={() => setIsVisible(false)}
+							data-testid="cancel-button"
+							className="rounded bg-g6 p-[0.3rem] text-secondary"
+						>
+							취소
+						</button>
+					</form>
+				)}
+			</div>
 		</li>
 	);
 }
