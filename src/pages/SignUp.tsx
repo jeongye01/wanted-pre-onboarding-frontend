@@ -20,6 +20,7 @@ function SignUp() {
 			navigate(SERVICE_URL.signIn);
 		} catch (error) {
 			console.error(error);
+			alert('오류 발생');
 		}
 	};
 	useEffect(() => {

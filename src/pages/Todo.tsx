@@ -1,9 +1,12 @@
 import TodoItem from 'app.features/todo/components/TodoItem';
 import client from 'app.modules/api/client';
+import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
 import { ITodo } from 'app.modules/types/todo';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Todo() {
+	const navigate = useNavigate();
 	const [newTodo, setNewTodo] = useState<string>('');
 	const [todos, setTodos] = useState<ITodo[]>([]);
 	const getTodosHandler = async () => {
@@ -58,6 +61,9 @@ function Todo() {
 	};
 
 	useEffect(() => {
+		if (!localStorage.getItem('ACCESS_TOKEN')) {
+			navigate(SERVICE_URL.signIn);
+		}
 		getTodosHandler();
 	}, []);
 	return (

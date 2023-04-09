@@ -38,7 +38,7 @@ function SignIn() {
 					id="email-signin"
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
-					data-testid="email"
+					data-testid="email-input"
 					type="email"
 					className="input-common"
 				/>
@@ -47,7 +47,7 @@ function SignIn() {
 					id="password-signin"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
-					data-testid="password"
+					data-testid="password-input"
 					className="input-common"
 				/>
 				<button
