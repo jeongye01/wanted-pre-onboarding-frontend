@@ -5,7 +5,9 @@ $ npm start
 ```
 
 
-2. 배포 링크
+2. 배포 링크 ->   https://main--silly-dasik-9c8813.netlify.app/
+
+
 
 
 

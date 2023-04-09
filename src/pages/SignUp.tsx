@@ -44,6 +44,7 @@ function SignUp() {
 				<input
 					id="password-signup"
 					value={password}
+					type="password"
 					onChange={(e) => setPassword(e.target.value)}
 					data-testid="password-input"
 					minLength={8}

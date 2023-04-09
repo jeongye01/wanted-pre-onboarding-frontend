@@ -6,7 +6,7 @@ import { SERVICE_URL } from './app.modules/constants/ServiceUrl';
 import SignUpPage from './pages/SignUp';
 import SignInPage from './pages/SignIn';
 import TodoPage from './pages/Todo';
-import HomePage from 'pages/Home';
+import HomePage from './pages/Home';
 
 function App() {
 	return (

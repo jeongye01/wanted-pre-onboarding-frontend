@@ -47,6 +47,7 @@ function SignIn() {
 					id="password-signin"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
+					type="password"
 					data-testid="password-input"
 					className="input-common"
 				/>
