@@ -27,19 +27,19 @@ function Todo() {
 			setNewTodo('');
 			getTodosHandler();
 		} catch (error) {
-			getTodosHandler();
 			console.error(error);
 		}
 	};
 
 	const deleteTodoHandler = async (id: ITodo['id']): Promise<void> => {
+		const snapShot = [...todos];
 		try {
+			const temp = snapShot.filter((item) => item.id !== id);
+			setTodos(temp); // optimistic ui
 			const res = await client.delete(`/todos/${id}`);
 			console.log(res);
-			let temp = [...todos];
-			temp = temp.filter((item) => item.id !== id);
-			setTodos(temp);
 		} catch (error) {
+			setTodos(snapShot);
 			console.error(error);
 		}
 	};
