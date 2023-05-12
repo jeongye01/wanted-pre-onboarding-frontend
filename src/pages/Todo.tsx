@@ -1,5 +1,6 @@
 import TodoItem from 'app.features/todo/components/TodoItem';
 import client from 'app.modules/api/client';
+import { AccessToken } from 'app.modules/constants/AccessToken';
 import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
 import { ITodo } from 'app.modules/types/todo';
 import React, { useEffect, useState } from 'react';
@@ -61,7 +62,7 @@ function Todo() {
 	};
 
 	useEffect(() => {
-		if (!localStorage.getItem('ACCESS_TOKEN')) {
+		if (!localStorage.getItem(AccessToken)) {
 			navigate(SERVICE_URL.signIn);
 		}
 		getTodosHandler();

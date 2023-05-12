@@ -1,5 +1,6 @@
 import AuthLayout from 'app.features/auth/components/AuthLayout';
 import client from 'app.modules/api/client';
+import { AccessToken } from 'app.modules/constants/AccessToken';
 import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +25,7 @@ function SignUp() {
 		}
 	};
 	useEffect(() => {
-		if (localStorage.getItem('ACCESS_TOKEN')) {
+		if (localStorage.getItem(AccessToken)) {
 			navigate(SERVICE_URL.todo);
 		}
 	}, []);

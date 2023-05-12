@@ -1,5 +1,6 @@
 import AuthLayout from 'app.features/auth/components/AuthLayout';
 import client from 'app.modules/api/client';
+import { AccessToken } from 'app.modules/constants/AccessToken';
 import { SERVICE_URL } from 'app.modules/constants/ServiceUrl';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,15 +19,15 @@ function SignIn() {
 				password,
 			});
 			client.defaults.headers['Authorization'] = `Bearer ${access_token}`;
-			localStorage.setItem('ACCESS_TOKEN', access_token);
+			localStorage.setItem(AccessToken, access_token);
 			// 로그인이 성공적으로 처리되었다면 /todo 경로로 이동합니다.
 			navigate(SERVICE_URL.todo);
 		} catch (error) {
-			console.error(error);
+			alert('오류 발생');
 		}
 	};
 	useEffect(() => {
-		if (localStorage.getItem('ACCESS_TOKEN')) {
+		if (localStorage.getItem(AccessToken)) {
 			navigate(SERVICE_URL.todo);
 		}
 	}, []);
